@@ -6,6 +6,7 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.View;
 
 import java.util.ArrayList;
@@ -60,24 +61,25 @@ public class RippleView extends View {
     public RippleView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         // 获取用户配置属性
-        TypedArray tya = context.obtainStyledAttributes(attrs, R.styleable.mRippleView);
-        mColor = tya.getColor(R.styleable.mRippleView_cColor, Color.BLUE);
-        mSpeed = tya.getInt(R.styleable.mRippleView_cSpeed, 1);
-        mDensity = tya.getInt(R.styleable.mRippleView_cDensity, 10);
-        mIsFill = tya.getBoolean(R.styleable.mRippleView_cIsFill, false);
-        mIsAlpha = tya.getBoolean(R.styleable.mRippleView_cIsAlpha, false);
+        TypedArray tya = context.obtainStyledAttributes(attrs, R.styleable.RippleView);
+        mColor = tya.getColor(R.styleable.RippleView_cColor, Color.BLUE);
+        mSpeed = tya.getInt(R.styleable.RippleView_cSpeed, 1);
+        mDensity = tya.getInt(R.styleable.RippleView_cDensity, 10);
+        mIsFill = tya.getBoolean(R.styleable.RippleView_cIsFill, false);
+        mIsAlpha = tya.getBoolean(R.styleable.RippleView_cIsAlpha, false);
         tya.recycle();
 
         init();
     }
-
+    int strokeWidth;
     private void init() {
         mContext = getContext();
 
         // 设置画笔样式
         mPaint = new Paint();
         mPaint.setColor(mColor);
-        mPaint.setStrokeWidth(DensityUtil.dip2px(mContext, 1));
+        strokeWidth = DensityUtil.dip2px(mContext, 8);
+        mPaint.setStrokeWidth(strokeWidth);
         if (mIsFill) {
             mPaint.setStyle(Paint.Style.FILL);
         } else {
@@ -107,7 +109,22 @@ public class RippleView extends View {
         // 外切正方形
         // drawOutCircle(canvas);
     }
+    public static float calculateLineWidth(
+            float maxLineWidth,
+            float minLineWidth,
+            float radius,
+            float distanceFromCenter) {
+        // 确保 distanceFromCenter 不超过半径
+        float distance = Math.min(distanceFromCenter, radius);
 
+        // 计算线条宽度
+        if (distance < radius) {
+            return maxLineWidth - (maxLineWidth - minLineWidth) * (distance / radius);
+        } else {
+            return minLineWidth;
+        }
+    }
+    private float rippleRadius = 0; // 当前半径
     /**
      * 圆到宽度
      *
@@ -120,6 +137,15 @@ public class RippleView extends View {
         for (int i = 0; i < mRipples.size(); i++) {
             Circle c = mRipples.get(i);
             mPaint.setAlpha(c.alpha);// （透明）0~255（不透明）
+            rippleRadius += 5; // 每次增加半径
+            if (c.width > mWidth / 2) {
+                rippleRadius = 0;
+            }
+
+            // 计算线条随半径变化的宽度
+            float currentStrokeWidth = strokeWidth * (1 - c.width / mWidth / 2);
+            Log.i("ddv","currentStrokeWidth = " + currentStrokeWidth);
+//            mPaint.setStrokeWidth(currentStrokeWidth);
             canvas.drawCircle(mWidth / 2, mHeight / 2, c.width - mPaint.getStrokeWidth(), mPaint);
 
             // 当圆超出View的宽度后删除

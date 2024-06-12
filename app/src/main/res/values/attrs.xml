@@ -2,7 +2,7 @@
 <resources>
 
     <!--涟漪控件属性-->
-    <declare-styleable name="mRippleView">
+    <declare-styleable name="RippleView">
         <attr name="cColor" format="color"/>
         <attr name="cSpeed" format="integer"/>
         <attr name="cDensity" format="integer"/>
