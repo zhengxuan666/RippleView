@@ -9,10 +9,21 @@
         android:layout_height="0dp"
         android:layout_weight="1"
         app:cColor="#ff0000"
+        app:cIsFill="true"
         app:cDensity="20"
         app:cIsAlpha="true"/>
     <zhuwentao.com.rippleview.MultiRippleView
         android:layout_width="match_parent"
         android:layout_weight="1"
         android:layout_height="0dp"/>
+
+    <zhuwentao.com.rippleview.MultiRippleView2
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:Color="#FF0000"
+        app:Density="50"
+        app:Speed="2"
+        app:IsFill="true"
+        app:IsAlpha="true"
+        android:layout_weight="1"/>
 </LinearLayout>

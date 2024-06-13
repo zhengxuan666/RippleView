@@ -8,6 +8,15 @@
         <attr name="cDensity" format="integer"/>
         <attr name="cIsFill" format="boolean"/>
         <attr name="cIsAlpha" format="boolean"/>
+        <attr name="strokeChange" format="boolean"/>
+    </declare-styleable>
+
+    <declare-styleable name="MultiRippleView2">
+        <attr name="Color" format="color"/>
+        <attr name="Speed" format="integer"/>
+        <attr name="Density" format="integer"/>
+        <attr name="IsFill" format="boolean"/>
+        <attr name="IsAlpha" format="boolean"/>
     </declare-styleable>
 
 </resources>

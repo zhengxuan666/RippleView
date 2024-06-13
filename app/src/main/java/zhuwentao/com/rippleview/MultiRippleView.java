@@ -53,9 +53,9 @@ public class MultiRippleView extends View {
 
         ripples = new ArrayList<>();
         // 初始化多个水波纹
-        ripples.add(new Ripple(0, 2)); // 初始半径为0，速度为5
-        ripples.add(new Ripple(100, 2)); // 初始半径为50，速度为3
-        ripples.add(new Ripple(200, 2)); // 初始半径为100，速度为2
+        ripples.add(new Ripple(0, 3)); // 初始半径为0，速度为5
+        ripples.add(new Ripple(100, 3)); // 初始半径为50，速度为3
+        ripples.add(new Ripple(200, 3)); // 初始半径为100，速度为2
         update();
     }
 

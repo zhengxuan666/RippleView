@@ -50,6 +50,9 @@ public class RippleView extends View {
     // 圆圈是否为渐变模式
     private boolean mIsAlpha;
 
+    // 描边变化
+    private boolean mStrokeChange;
+
     public RippleView(Context context) {
         this(context, null);
     }
@@ -67,11 +70,14 @@ public class RippleView extends View {
         mDensity = tya.getInt(R.styleable.RippleView_cDensity, 10);
         mIsFill = tya.getBoolean(R.styleable.RippleView_cIsFill, false);
         mIsAlpha = tya.getBoolean(R.styleable.RippleView_cIsAlpha, false);
+        mStrokeChange = tya.getBoolean(R.styleable.RippleView_strokeChange, true);
         tya.recycle();
 
         init();
     }
+
     int strokeWidth;
+
     private void init() {
         mContext = getContext();
 
@@ -109,22 +115,7 @@ public class RippleView extends View {
         // 外切正方形
         // drawOutCircle(canvas);
     }
-    public static float calculateLineWidth(
-            float maxLineWidth,
-            float minLineWidth,
-            float radius,
-            float distanceFromCenter) {
-        // 确保 distanceFromCenter 不超过半径
-        float distance = Math.min(distanceFromCenter, radius);
 
-        // 计算线条宽度
-        if (distance < radius) {
-            return maxLineWidth - (maxLineWidth - minLineWidth) * (distance / radius);
-        } else {
-            return minLineWidth;
-        }
-    }
-    private float rippleRadius = 0; // 当前半径
     /**
      * 圆到宽度
      *
@@ -136,16 +127,11 @@ public class RippleView extends View {
         // 处理每个圆的宽度和透明度
         for (int i = 0; i < mRipples.size(); i++) {
             Circle c = mRipples.get(i);
-            mPaint.setAlpha(c.alpha);// （透明）0~255（不透明）
-            rippleRadius += 5; // 每次增加半径
-            if (c.width > mWidth / 2) {
-                rippleRadius = 0;
+            if (mStrokeChange) {
+                float currentStrokeWidth = strokeWidth * (1 - c.width / (mWidth / 2));
+                mPaint.setStrokeWidth(currentStrokeWidth);
             }
-
-            // 计算线条随半径变化的宽度
-            float currentStrokeWidth = strokeWidth * (1 - c.width / mWidth / 2);
-            Log.i("ddv","currentStrokeWidth = " + currentStrokeWidth);
-//            mPaint.setStrokeWidth(currentStrokeWidth);
+            mPaint.setAlpha(c.alpha);// （透明）0~255（不透明）
             canvas.drawCircle(mWidth / 2, mHeight / 2, c.width - mPaint.getStrokeWidth(), mPaint);
 
             // 当圆超出View的宽度后删除
